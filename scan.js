@@ -144,8 +144,8 @@
       , 'find': find 
       , 'fn': {
             'find': relayFind()
-          , 'contains': function(needle) {
-                return contains(this, needle);
+          , 'contains': function(needle, i) {
+                return contains(this, needle, i);
              }
         }
     };
