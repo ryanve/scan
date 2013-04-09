@@ -18,10 +18,10 @@
       , compareDocPos = 'compareDocumentPosition'
 
         /**
-         * Determine if node A contains element B. Same as jQuery.contains
-         * @param  {Node}  a   node to search in
-         * @param  {Node}  b   elem to search for
-         * @return {boolean}   true if B is a child elem of A
+         * check if node A contains element B - same as jQuery.contains
+         * @param  {Node|*}  a   node to search in
+         * @param  {Node|*}  b   elem to search for
+         * @return {boolean}     true if B is a child elem of A
          */
       , inNode = docElem.contains || docElem[compareDocPos] ? function(a, b) {
             var adown, bup = b && b.parentNode;
@@ -37,7 +37,7 @@
         }
 
         /**
-         * @param  {string|null} selector
+         * @param  {string|*} selector
          * @param  {(Node|NodeList|Array|Object)=}  root
          * @return {Array|NodeList}
          */
@@ -65,12 +65,12 @@
                 }
             }
             return els;
-        } : function() {
+        } : function(selector, root) {
             return []; 
         };
     
     /**
-     * Combines jQuery.contains, _.contains, string.contains
+     * combines jQuery.contains, _.contains, string.contains
      * @param  {Node|Array|Object|string} ob
      * @param  {*}                        needle
      * @param  {number=}                  i
@@ -98,9 +98,9 @@
     }
     
     /**
-     * @param  {Array|Object}  collection
-     * @param  {Node|Function} needle
-     * @param  {Object=}       scope
+     * @param  {Object|Array}               collection
+     * @param  {Object|Array|Node|Function} needle
+     * @param  {Object=}                    scope
      * @return {Array|*}
      */    
     function find(collection, needle, scope) {
@@ -145,7 +145,7 @@
       , 'fn': {
             'find': relayFind()
           , 'contains': function(needle) {
-                return contains.call(this, needle);
+                return contains(this, needle);
              }
         }
     };
