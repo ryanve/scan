@@ -1,3 +1,8 @@
-(function ($, name) {/* ender.jit.su bridge */
-    $ && $['ender'](name = require(name)) == ($['_select'] = name['qsa']);
+/* ender.jit.su bridge */
+(function ($, name) {
+    if ($) {
+        name = require(name);
+        $['ender'](name['fn'], true);
+        $['_select'] = name['qsa'];
+    }
 }(this['ender'], 'scan'));

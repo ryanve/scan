@@ -3,7 +3,7 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.1.0
+ * @version     0.1.1
  */
 
 (function(root, name, make) {
