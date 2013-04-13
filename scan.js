@@ -3,13 +3,11 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.x
+ * @version     0.1.0
  */
 
-(function(root, name, definition) {
-    if (typeof module != 'undefined' && module['exports'])
-        module['exports'] = definition(); 
-    else root[name] = definition();
+(function(root, name, make) {
+    typeof module != 'undefined' && module['exports'] ? module['exports'] = make() : root[name] = make();
 }(this, 'scan', function() {
     
     var doc = document
