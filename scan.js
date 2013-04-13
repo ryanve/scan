@@ -75,8 +75,10 @@
      * @return {boolean}
      */
     function contains(ob, needle, i) {
-        if (ob.nodeType)
-            return inNode(ob, needle);
+        return ob.nodeType ? inNode(ob, needle) : include(ob, needle, i);
+    }
+    
+    function include(ob, needle, i) {
         i >>= 0;
         if (ob.indexOf)
             return !!~ob.indexOf(needle, i);
