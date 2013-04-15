@@ -3,7 +3,7 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.1.1
+ * @version     0.2.0
  */
 
 (function(root, name, make) {
@@ -144,9 +144,6 @@
       , 'find': find 
       , 'fn': {
             'find': relayFind()
-          , 'contains': function(needle, i) {
-                return contains(this, needle, i);
-             }
         }
     };
 }));
