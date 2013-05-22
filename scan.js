@@ -3,7 +3,7 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.2.1
+ * @version     0.2.2
  */
  
  /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
@@ -37,8 +37,8 @@
         }
 
         /**
-         * @param  {(string|null)=}                            selector
-         * @param  {(string|Node|NodeList|Array|Object|null)=} root
+         * @param  {(string|null)=}                        selector
+         * @param  {(string|Node|NodeList|Array|Object)=}  root
          * @return {Array|NodeList}
          */
       , qsa = doc[query] ? function(selector, root) {
@@ -107,9 +107,9 @@
     }
     
     /**
-     * @param  {Object|Array}               collection
-     * @param  {Object|Array|Node|Function} needle
-     * @param  {Object=}                    scope
+     * @param  {Object|Array}                 collection
+     * @param  {Object|Array|Node|Function|*} needle
+     * @param  {*=}                           scope
      * @return {Array|*}
      */    
     function find(collection, needle, scope) {
@@ -132,17 +132,13 @@
     }
     
     /**
-     * @param  {*=} $
-     * @return {Function}
-     */    
-    function relayFind($) {
-        $ = typeof $ == 'function' && $;
-        function fnFind(needle, scope) {
-            var ret = typeof needle == 'string' ? qsa(needle, this) : find(this, needle, scope);
-            return $ && typeof needle != 'function' ? $(ret) : ret;
-        }
-        fnFind['relay'] = relayFind;
-        return fnFind;
+     * @this  {Object|Array}
+     * @param {*}   needle
+     * @param {*=}  scope
+     */
+    function fnFind(needle, scope) {
+        var ret = typeof needle == 'string' ? qsa(needle, this) : find(this, needle, scope);
+        return typeof needle != 'function' && this['$'] ? this['$'](ret) : ret;
     }
 
     return {
@@ -150,9 +146,7 @@
       , 'id': id
       , 'inNode': inNode
       , 'contains': contains
-      , 'find': find 
-      , 'fn': {
-            'find': relayFind()
-        }
+      , 'find': find
+      , 'fn': {'find': fnFind}
     };
 }));
