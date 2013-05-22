@@ -3,7 +3,7 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.2.2
+ * @version     0.2.3
  */
  
  /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
@@ -107,38 +107,57 @@
     }
     
     /**
-     * @param  {Object|Array}                 collection
-     * @param  {Object|Array|Node|Function|*} needle
-     * @param  {*=}                           scope
-     * @return {Array|*}
-     */    
-    function find(collection, needle, scope) {
-        var ret, j, l, i = 0, u = 0, h = collection.length;
-        if (typeof needle == 'object') {
-            ret = [];
-            needle = needle.nodeType ? [needle] : needle;
-            for (l = needle.length; i < l; i++) {
-                for (j = h; j--;) {
-                    if (inNode(collection[j], needle[i])) {
-                        ret[u++] = needle[i];
-                        break;
-                    }
+     * @param  {Object|Array|NodeList}      collection
+     * @param  {Object|Array|NodeList|Node} needle
+     * @return {Array}
+     */
+    function findDown(collection, needle) {
+        var j, l, ret = [], i = 0, u = 0, h = collection.length;
+        needle = needle.nodeType ? [needle] : needle;
+        for (l = needle.length; i < l; i++) {
+            for (j = h; j--;) {
+                if (inNode(collection[j], needle[i])) {
+                    ret[u++] = needle[i];
+                    break;
                 }
             }
-        } else for (; i < h; i++) {
-            if (needle.call(scope, collection[i], i, collection))
-                return collection[i];
-        } return ret;
+        }
+        return ret;
     }
     
     /**
-     * @this  {Object|Array}
-     * @param {*}   needle
-     * @param {*=}  scope
+     * @param  {Object|Array|NodeList}                 collection
+     * @param  {Object|Array|NodeList|Node|Function|*} needle
+     * @param  {*=}                                    scope
+     * @return {Array|*}
+     */
+    function find(collection, needle, scope) {
+        return (typeof needle == 'object' ? findDown : detect)(collection, needle, scope);
+    }
+    
+    /**
+     * @param  {Object|Array|NodeList} ob
+     * @param  {Function}              test
+     * @param  {*=}                    scope
+     */    
+    function detect(ob, test, scope) {
+        for (var i = 0, l = ob.length; i < l; i++) {
+            if (test.call(scope, ob[i], i, ob))
+                return ob[i];
+        }
+    }
+    
+    /**
+     * @this  {Object|Array|NodeList}
+     * @param {Object|Array|NodeList|Node|Function|string|*}  needle
+     * @param {*=}                                            scope
      */
     function fnFind(needle, scope) {
-        var ret = typeof needle == 'string' ? qsa(needle, this) : find(this, needle, scope);
-        return typeof needle != 'function' && this['$'] ? this['$'](ret) : ret;
+        var ret;
+        if (typeof needle == 'string') ret = qsa(needle, this);
+        else if (typeof needle == 'object') ret = findDown(this, needle);
+        else return detect(this, needle, scope);
+        return this['$'] ? this['$'](ret) : ret;
     }
 
     return {
