@@ -3,8 +3,11 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.2.0
+ * @version     0.2.1
  */
+ 
+ /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
+  laxcomma:true, eqnull:true, undef:true, unused:true, browser:true, jquery:true, maxerr:100 */
 
 (function(root, name, make) {
     typeof module != 'undefined' && module['exports'] ? module['exports'] = make() : root[name] = make();
@@ -23,10 +26,9 @@
          */
       , inNode = docElem.contains || docElem[compareDocPos] ? function(a, b) {
             var adown, bup = b && b.parentNode;
-            return bup && 1 === bup.nodeType ? a === bup || !!(
-                (adown = 9 === a.nodeType ? a.documentElement : a).contains 
-                    ? adown.contains(bup)
-                    : a[compareDocPos] && a[compareDocPos](bup) & 16
+            return bup && 1 === bup.nodeType ? a === bup || !!((
+                    adown = 9 === a.nodeType ? a.documentElement : a
+                ).contains ? adown.contains(bup) : a[compareDocPos] && a[compareDocPos](bup) & 16
             ) : false;
         } : function(a, b) {
             if (b) while (b = b.parentNode) {
@@ -35,37 +37,44 @@
         }
 
         /**
-         * @param  {string|*} selector
-         * @param  {(Node|NodeList|Array|Object)=}  root
+         * @param  {(string|null)=}                            selector
+         * @param  {(string|Node|NodeList|Array|Object|null)=} root
          * @return {Array|NodeList}
          */
       , qsa = doc[query] ? function(selector, root) {
-            var group, j, u, l, i, e, els = []; 
             if (!selector)
-                return els;
+                return [];
             root = null == root ? doc : typeof root == 'string' ? qsa(root) : root;
             if (typeof root != 'object')
-                return els;
+                return [];
             if (root[query])
                 return root[query](selector);
-
-            // (selector, collection)
-            // accumulate unique nodes
-            l = root.length;
-            e = i = 0;
-            while (i < l) {
-                group = qsa(selector, root[i++]);
-                label:for (u = 0; group[u]; u++) {
-                    for (j = e; j--;) {
-                        if (els[j] === group[u])
-                            continue label;
-                    } els[e++] = group[u];
-                }
-            }
-            return els;
-        } : function(selector, root) {
+            return amassUnique(root, selector); // root was collection
+        } : function() {
             return []; 
         };
+        
+    /**
+     * @param  {Array|Object|NodeList}     roots
+     * @param  {(string|null)=}            selector
+     * @param  {(Array|Object|NodeList)=}  base
+     * @param  {Function=}                 engine
+     * @return {Array}
+     */
+    function amassUnique(roots, selector, base, engine) {
+        var u, j, group, els = [], e = 0, l = roots.length, i = base ? -1 : 0;
+        for (engine = engine || qsa; i < l; i++) {
+            group = ~i ? engine(selector, roots[i]) : base;
+            label:for (u = 0; group[u]; u++) {
+                for (j = e; j--;) {
+                    if (els[j] === group[u])
+                        continue label;
+                }
+                els[e++] = group[u];
+            }
+        }
+        return els;
+    }
     
     /**
      * combines jQuery.contains, _.contains, string.contains
