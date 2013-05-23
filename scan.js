@@ -3,7 +3,7 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.2.3
+ * @version     0.2.4
  */
  
  /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
@@ -157,7 +157,7 @@
         if (typeof needle == 'string') ret = qsa(needle, this);
         else if (typeof needle == 'object') ret = findDown(this, needle);
         else return detect(this, needle, scope);
-        return this['$'] ? this['$'](ret) : ret;
+        return this['$'] && this['$']['fn'] && this['$'](ret) || ret;
     }
 
     return {
