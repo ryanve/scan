@@ -13,7 +13,8 @@
     typeof module != 'undefined' && module['exports'] ? module['exports'] = make() : root[name] = make();
 }(this, 'scan', function() {
     
-    var doc = document
+    var effin = {}
+      , doc = document
       , docElem = doc.documentElement
       , query = 'querySelectorAll' // caniuse.com/#feat=queryselector
       , compareDocPos = 'compareDocumentPosition'
@@ -152,13 +153,13 @@
      * @param {Object|Array|NodeList|Node|Function|string|*}  needle
      * @param {*=}                                            scope
      */
-    function fnFind(needle, scope) {
+    effin['find'] = function(needle, scope) {
         var ret;
         if (typeof needle == 'string') ret = qsa(needle, this);
         else if (typeof needle == 'object') ret = findDown(this, needle);
         else return detect(this, needle, scope);
         return this['$'] && this['$']['fn'] && this['$'](ret) || ret;
-    }
+    };
 
     return {
         'qsa': qsa
@@ -166,6 +167,6 @@
       , 'inNode': inNode
       , 'contains': contains
       , 'find': find
-      , 'fn': {'find': fnFind}
+      , 'fn': effin
     };
 }));
