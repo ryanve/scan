@@ -29,23 +29,44 @@
 </main>
 
 <script src="http://airve.github.io/js/aok/aok.min.js"></script>
+<script src="http://airve.github.io/js/ender/ender.js"></script>
 <script src="scan.js"></script>
 <script>
-    (function(document, aok, scan) {
-        var byClass = 'getElementsByClassName'
-          , byTag = 'getElementsByTagName';
+    (function(root, document) {
+        var aok = root['aok']
+          , scan = root['scan']
+          , ender = root['ender']
+          , docElem = document.documentElement
+          , byClass = 'getElementsByClassName'
+          , byTag = 'getElementsByTagName'
+          , hasByClass = !!document[byClass]
+          , all = document.querySelectorAll('*');
 
         aok({
+            id: 'qsaBasic',
             test: function() {
-                return scan.qsa('div').length === document[byTag]('div').length;
+                return (
+                    scan.qsa('div').length === document[byTag]('div').length
+                 && (!hasByClass || scan.qsa('.div').length === document[byClass]('div').length)
+                );
             }
         });
         aok({
+            id: 'contains',
             test: function() {
-                return scan.qsa('.div').length === (document[byClass] ? document[byClass]('div').length : 0);
+                return (
+                    true === scan.contains('string', 's')
+                 && true === scan.contains('string', 'ring')
+                 && false === scan.contains('string', 'a')
+                 && true === scan.contains(docElem, docElem[byTag]('*')[0])
+                 && false === scan.contains(docElem[byTag]('*')[0], docElem)
+                 && true === scan.contains([0, 1, 2], 1)
+                 && false === scan.contains([0, 1, 2], 3)
+                 && false === scan.contains({}, 1)
+                );
             }
         });
-    }(document, aok, scan));
+    }(this, document));
 </script>
 </body>
 </html>

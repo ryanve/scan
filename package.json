@@ -1,7 +1,7 @@
 {
     "name": "scan",
     "description": "querySelectorAll query selector engine",
-    "version": "0.2.4",
+    "version": "0.3.0",
     "homepage": "https://github.com/ryanve/scan",
     "author": "Ryan Van Etten <ryanve@gmail.com> (http://ryanve.com)",
     "keywords": ["selector", "selector engine", "query", "ender"],

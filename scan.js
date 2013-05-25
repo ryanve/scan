@@ -3,7 +3,7 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.2.4
+ * @version     0.3.0
  */
  
  /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
@@ -13,11 +13,12 @@
     typeof module != 'undefined' && module['exports'] ? module['exports'] = make() : root[name] = make();
 }(this, 'scan', function() {
     
-    var effin = {}
-      , doc = document
+    var doc = document
       , docElem = doc.documentElement
+      , effin = {}
       , query = 'querySelectorAll' // caniuse.com/#feat=queryselector
       , compareDocPos = 'compareDocumentPosition'
+      , rewrap = 'pushStack'
 
         /**
          * check if node A contains element B - same as jQuery.contains
@@ -49,12 +50,33 @@
             if (typeof root != 'object')
                 return [];
             if (root[query])
-                return root[query](selector);
+                return compact(root[query](selector));
             return amassUnique(root, selector); // root was collection
         } : function() {
             return []; 
         };
-        
+    
+    /**
+     * @param  {Array|Object|NodeList|string} list
+     * @return {Array}
+     */
+    function compact(list) {
+        for (var pure = [], l = list.length, i = 0; i < l; i++)
+            null == list[i] || (pure[i] = list[i]);
+        return pure;
+    }
+    
+    /**
+     * @param  {(string|Node|NodeList|Array|*)=}       selector
+     * @param  {(string|Node|NodeList|Array|Object)=}  root
+     * @return {Array}
+     */
+    function scan(item, root) {
+        if (!item) return [];
+        if (typeof item == 'string') return qsa(item, root);
+        return item.nodeType || item.window == item ? [item] : compact(item);
+    }
+
     /**
      * @param  {Array|Object|NodeList}     roots
      * @param  {(string|null)=}            selector
@@ -78,27 +100,31 @@
     }
     
     /**
-     * combines jQuery.contains, _.contains, string.contains
-     * @param  {Node|Array|Object|string} ob
-     * @param  {*}                        needle
-     * @param  {number=}                  i
+     * @param  {Array|Object}  ob
+     * @param  {*}             needle
+     * @param  {number=}       start
      * @return {boolean}
      */
-    function contains(ob, needle, i) {
-        return ob.nodeType ? inNode(ob, needle) : include(ob, needle, i);
+    function include(ob, needle, start) {
+        var l = ob.length, i = start >> 0;
+        l = l !== +l && this['values'] ? (ob = this['values'](ob)).length : l;
+        for (0 > i && (i += l); i < l; i++)
+            if (ob[i] === needle && i in ob) return true;
+        return false;
     }
-    
-    function include(ob, needle, i) {
-        i >>= 0;
-        if (ob.indexOf)
-            return !!~ob.indexOf(needle, i);
-        var l = ob.length;
-        for (i = 0 > i ? i + l : i; i < l; i++) {
-            if (i in ob && ob[i] === needle)
-                return true;
-        } return false;
+
+    /**
+     * combines jQuery.contains, _.contains, string.contains
+     * @param  {string|Array|Object|Node} ob
+     * @param  {*}                        needle
+     * @param  {number=}                  start
+     * @return {boolean}
+     */
+    function contains(ob, needle, start) {
+        if (typeof ob == 'string') return !!~ob.indexOf(needle, start >> 0);
+        return ob.nodeType ? inNode(ob, needle) : include(ob, needle, start);
     }
-    
+
     /**
      * @param  {string}  str
      * @return {Node|boolean}
@@ -154,19 +180,31 @@
      * @param {*=}                                            scope
      */
     effin['find'] = function(needle, scope) {
-        var ret;
-        if (typeof needle == 'string') ret = qsa(needle, this);
-        else if (typeof needle == 'object') ret = findDown(this, needle);
+        var found;
+        if (typeof needle == 'string') found = qsa(needle, this);
+        else if (typeof needle == 'object') found = findDown(this, needle);
         else return detect(this, needle, scope);
-        return this['$'] && this['$']['fn'] && this['$'](ret) || ret;
+        return this[rewrap] ? this[rewrap](found) : found;
     };
+    
+    detect(['filter', 'not'], function(key, i) {
+        var keep = !i;
+        this[key] = function(q) {
+            var kept = [], isF = typeof q == 'function';
+            q && detect(this, function(v, j) {
+                var fail = isF ? !q.call(v, j) : !include(this, v);
+                fail === keep || kept.push(v);
+            }, typeof q == 'string' ? qsa(q) : !isF && q.nodeType ? [q] : q);
+            return this[rewrap] ? this[rewrap](kept) : kept;
+        };
+    }, effin);
 
-    return {
-        'qsa': qsa
-      , 'id': id
-      , 'inNode': inNode
-      , 'contains': contains
-      , 'find': find
-      , 'fn': effin
-    };
+    scan['scan'] = scan;
+    scan['qsa'] = qsa;
+    scan['id'] = id;
+    scan['inNode'] = inNode;
+    scan['contains'] = contains;
+    scan['find'] = find;
+    scan['fn'] = effin;
+    return scan;
 }));
