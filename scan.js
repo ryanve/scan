@@ -6,7 +6,7 @@
  * @version     0.3.0
  */
  
- /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
+/*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
   laxcomma:true, eqnull:true, undef:true, unused:true, browser:true, jquery:true, maxerr:100 */
 
 (function(root, name, make) {
@@ -41,7 +41,7 @@
         /**
          * @param  {(string|null)=}                        selector
          * @param  {(string|Node|NodeList|Array|Object)=}  root
-         * @return {Array|NodeList}
+         * @return {Array}
          */
       , qsa = doc[query] ? function(selector, root) {
             if (!selector)
@@ -186,18 +186,6 @@
         else return detect(this, needle, scope);
         return this[rewrap] ? this[rewrap](found) : found;
     };
-    
-    detect(['filter', 'not'], function(key, i) {
-        var keep = !i;
-        this[key] = function(q) {
-            var kept = [], isF = typeof q == 'function';
-            q && detect(this, function(v, j) {
-                var fail = isF ? !q.call(v, j) : !include(this, v);
-                fail === keep || kept.push(v);
-            }, typeof q == 'string' ? qsa(q) : !isF && q.nodeType ? [q] : q);
-            return this[rewrap] ? this[rewrap](kept) : kept;
-        };
-    }, effin);
 
     scan['scan'] = scan;
     scan['qsa'] = qsa;
