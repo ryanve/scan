@@ -3,7 +3,7 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.3.0
+ * @version     0.3.1
  */
  
 /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
@@ -12,7 +12,7 @@
 (function(root, name, make) {
     typeof module != 'undefined' && module['exports'] ? module['exports'] = make() : root[name] = make();
 }(this, 'scan', function() {
-    
+
     var doc = document
       , docElem = doc.documentElement
       , effin = {}
@@ -27,15 +27,14 @@
          * @return {boolean}     true if B is a child elem of A
          */
       , inNode = docElem.contains || docElem[compareDocPos] ? function(a, b) {
-            var adown, bup = b && b.parentNode;
-            return bup && 1 === bup.nodeType ? a === bup || !!((
-                    adown = 9 === a.nodeType ? a.documentElement : a
-                ).contains ? adown.contains(bup) : a[compareDocPos] && a[compareDocPos](bup) & 16
+            var adown = 9 === a.nodeType ? a.documentElement : a, bup = b && b.parentNode;
+            return bup && 1 === bup.nodeType ? a === bup || !!(
+                adown.contains ? adown.contains(bup) : a[compareDocPos] && a[compareDocPos](bup) & 16
             ) : false;
         } : function(a, b) {
-            if (b) while (b = b.parentNode) {
+            while (b = b && b.parentNode)
                 if (b === a) return true;
-            } return false;
+            return false;
         }
 
         /**

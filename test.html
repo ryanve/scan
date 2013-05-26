@@ -42,6 +42,9 @@
           , hasByClass = !!document[byClass]
           , all = document.querySelectorAll('*');
 
+        // Use alert if console is unavail.
+        aok.prototype.express.force = true;
+
         aok({
             id: 'qsaBasic',
             test: function() {
