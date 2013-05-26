@@ -3,7 +3,7 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.4.1
+ * @version     0.4.2
  */
  
 /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
@@ -56,7 +56,7 @@
         };
     
     /**
-     * @param  {Array|Object|NodeList|string} list
+     * @param  {Array|Object|NodeList|string|*} list
      * @return {Array}
      */
     function ary(list) {
@@ -106,7 +106,6 @@
      */
     function include(ob, needle, start) {
         var l = ob.length, i = start >> 0;
-        l = l !== +l && this['values'] ? (ob = this['values'](ob)).length : l;
         for (0 > i && (i += l); i < l; i++)
             if (ob[i] === needle && i in ob) return true;
         return false;
