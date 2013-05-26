@@ -3,7 +3,7 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.3.1
+ * @version     0.4.0
  */
  
 /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
@@ -49,7 +49,7 @@
             if (typeof root != 'object')
                 return [];
             if (root[query])
-                return compact(root[query](selector));
+                return ary(root[query](selector));
             return amassUnique(root, selector); // root was collection
         } : function() {
             return []; 
@@ -59,9 +59,9 @@
      * @param  {Array|Object|NodeList|string} list
      * @return {Array}
      */
-    function compact(list) {
-        for (var pure = [], l = list.length, i = 0; i < l; i++)
-            null == list[i] || (pure[i] = list[i]);
+    function ary(list) {
+        var pure = [], l = list.length, i = 0;
+        while (i < l) pure[i] = list[i++];
         return pure;
     }
     
@@ -73,7 +73,7 @@
     function scan(item, root) {
         if (!item) return [];
         if (typeof item == 'string') return qsa(item, root);
-        return item.nodeType || item.window == item ? [item] : compact(item);
+        return item.nodeType || item.window == item ? [item] : ary(item);
     }
 
     /**
@@ -185,6 +185,19 @@
         else return detect(this, needle, scope);
         return this[rewrap] ? this[rewrap](found) : found;
     };
+    
+    // Comply w/ api.jquery.com/filter + api.jquery.com/not
+    detect(['filter', 'not'], function(key, i) {
+        var keep = !i;
+        effin[key] = function(q) {
+            var kept = [], isF = typeof q == 'function';
+            null == q ? (kept = keep ? kept : ary(this)) : detect(this, function(v, j) {
+                var fail = isF ? !q.call(v, j) : !include(this, v);
+                fail !== keep && kept.push(v);
+            }, typeof q == 'string' ? qsa(q) : !isF && q.nodeType ? [q] : q);
+            return this[rewrap] ? this[rewrap](kept) : kept;
+        };
+    });
 
     scan['scan'] = scan;
     scan['qsa'] = qsa;
