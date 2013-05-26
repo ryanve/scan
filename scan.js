@@ -3,7 +3,7 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.4.0
+ * @version     0.4.1
  */
  
 /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
@@ -66,7 +66,7 @@
     }
     
     /**
-     * @param  {(string|Node|NodeList|Array|*)=}       selector
+     * @param  {(string|Node|NodeList|Array|*)=}       item
      * @param  {(string|Node|NodeList|Array|Object)=}  root
      * @return {Array}
      */
@@ -152,16 +152,6 @@
     }
     
     /**
-     * @param  {Object|Array|NodeList}                 collection
-     * @param  {Object|Array|NodeList|Node|Function|*} needle
-     * @param  {*=}                                    scope
-     * @return {Array|*}
-     */
-    function find(collection, needle, scope) {
-        return (typeof needle == 'object' ? findDown : detect)(collection, needle, scope);
-    }
-    
-    /**
      * @param  {Object|Array|NodeList} ob
      * @param  {Function}              test
      * @param  {*=}                    scope
@@ -204,7 +194,7 @@
     scan['id'] = id;
     scan['inNode'] = inNode;
     scan['contains'] = contains;
-    scan['find'] = find;
+    scan['find'] = detect;
     scan['fn'] = effin;
     return scan;
 }));
