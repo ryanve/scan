@@ -3,7 +3,7 @@
  * @author      Ryan Van Etten <@ryanve>
  * @link        github.com/ryanve/scan
  * @license     MIT
- * @version     0.4.2
+ * @version     0.4.3
  */
  
 /*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
@@ -16,7 +16,9 @@
     var doc = document
       , docElem = doc.documentElement
       , effin = {}
-      , query = 'querySelectorAll' // caniuse.com/#feat=queryselector
+      , byAll = 'querySelectorAll' // caniuse.com/#feat=queryselector
+      , byTag = 'getElementsByTagName'
+      , query = doc[byAll] ? byAll : byTag
       , compareDocPos = 'compareDocumentPosition'
       , rewrap = 'pushStack'
 
@@ -35,26 +37,21 @@
             while (b = b && b.parentNode)
                 if (b === a) return true;
             return false;
-        }
-
-        /**
-         * @param  {(string|null)=}                        selector
-         * @param  {(string|Node|NodeList|Array|Object)=}  root
-         * @return {Array}
-         */
-      , qsa = doc[query] ? function(selector, root) {
-            if (!selector)
-                return [];
-            root = null == root ? doc : typeof root == 'string' ? qsa(root) : root;
-            if (typeof root != 'object')
-                return [];
-            if (root[query])
-                return ary(root[query](selector));
-            return amassUnique(root, selector); // root was collection
-        } : function() {
-            return []; 
         };
-    
+
+    /**
+     * @param  {(string|null)=}                       selector
+     * @param  {(string|Node|NodeList|Array|Object)=} root
+     * @return {Array}
+     */
+    function qsa(selector, root) {
+        if (!selector) return [];
+        root = null == root ? doc : typeof root == 'string' ? qsa(root) : root;
+        return typeof root != 'object' ? [] : root.nodeType ? (
+            root[query] ? ary(root[query](selector)) : []
+        ) : amassUnique(root, selector); // root was collection
+    }
+
     /**
      * @param  {Array|Object|NodeList|string|*} list
      * @return {Array}
@@ -152,14 +149,12 @@
     
     /**
      * @param  {Object|Array|NodeList} ob
-     * @param  {Function}              test
+     * @param  {Function}              fn
      * @param  {*=}                    scope
      */    
-    function detect(ob, test, scope) {
-        for (var i = 0, l = ob.length; i < l; i++) {
-            if (test.call(scope, ob[i], i, ob))
-                return ob[i];
-        }
+    function detect(ob, fn, scope) {
+        for (var v, i = 0, l = ob.length; i < l;)
+            if (fn.call(scope, v = ob[i], i++, ob)) return v;
     }
     
     /**
