@@ -2,7 +2,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
-            beforeconcat: ['src/<%= pkg.name %>.js', 'test/tests.js'],
+            beforeconcat: ['src/<%= pkg.name %>.js', 'src/ender.js', 'test/tests.js'],
             afterconcat: ['<%= pkg.name %>.js'],
             options: {
                 expr:true, sub:true, supernew:true, debug:true, node:true, 

@@ -1,6 +1,3 @@
-/*jshint expr:true, sub:true, supernew:true, debug:true, node:true, boss:true, devel:true, evil:true, 
-  laxcomma:true, eqnull:true, undef:true, unused:true, browser:true, jquery:true, maxerr:100 */
-
 (function (root, name) {
     // ender.jit.su bridge
     var $ = root['ender']
