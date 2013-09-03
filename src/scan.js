@@ -1,9 +1,3 @@
-/*!
- * scan 0.5.0+201309030345
- * https://github.com/ryanve/scan
- * MIT License 2013 Ryan Van Etten
- */
-
 (function(root, name, make) {
     typeof module != 'undefined' && module['exports'] ? module['exports'] = make() : root[name] = make();
 }(this, 'scan', function() {

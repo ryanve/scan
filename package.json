@@ -1,14 +1,20 @@
 {
     "name": "scan",
-    "description": "querySelectorAll query selector engine",
-    "version": "0.4.3",
+    "description": "querySelectorAll selector engine",
+    "version": "0.5.0",
     "homepage": "https://github.com/ryanve/scan",
-    "author": "Ryan Van Etten <ryanve@gmail.com> (http://ryanve.com)",
+    "author": "Ryan Van Etten",
     "keywords": ["selector", "selector engine", "query", "ender"],
     "main": "./scan.js",
-    "ender": "./ender.js",
+    "ender": "./src/ender.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/ryanve/scan.git"
+    }, 
+    "devDependencies": {
+        "grunt": "~0.4.1",
+        "grunt-contrib-uglify": "~0.2.4",
+        "grunt-contrib-concat": "~0.3.0",
+        "grunt-contrib-jshint": "~0.6.4"
     }
 }

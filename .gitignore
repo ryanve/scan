@@ -1,0 +1,8 @@
+# help.github.com/articles/ignoring-files
+# github.com/github/gitignore
+# github.com/h5bp/html5-boilerplate/blob/master/doc/misc.md
+
+node_modules
+.DS_Store
+._*
+Thumbs.db
