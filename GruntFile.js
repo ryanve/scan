@@ -28,6 +28,7 @@ module.exports = function(grunt) {
         },
         uglify: {
             options: {
+                report: 'gzip',
                 preserveComments: 'some'
             },
             build: {
