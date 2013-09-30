@@ -20,7 +20,7 @@
    - Return the first `stack` item that `fn.call(scope, item, i, stack)` is truthy for
 - `.find(needle)`
   - `scan.fn.find.call(nodes, selector)` &rarr; descendants that match `selector`
-  - `scan.fn.find.call(nodes, element|elements)` &rarr; those `elements` that descend from any `nodes`
+  - `scan.fn.find.call(nodes, element|elements)` &rarr; `elements` that descend from any `nodes`
   - `scan.fn.find.call(stack, fn, scope?)` &rarr; same as `scan.find(stack, fn, scope?)`
 - `.filter(needle)`
   - `scan.fn.filter.call(nodes, selector)` &rarr; `nodes` filtered by `selector`

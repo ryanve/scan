@@ -1,4 +1,4 @@
-(function (root, name) {
+(function(root, name) {
     // ender.jit.su bridge
     var $ = root['ender']
       , x = require(name);
