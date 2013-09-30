@@ -9,6 +9,8 @@
       , divs = docElem[byTag]('div')
       , html = scan('html')
       , body = scan('body');
+      
+    3 > divs.length && aok.error('Tests require 3+ divs.');
     
     function isElement() {
         return 1 === this.nodeType;
@@ -59,12 +61,20 @@
     aok({id:'fnFilter', test:function() {
         var fn = scan.fn.filter;
         if (divs.length !== fn.call(divs, 'div').length) return false;
-        return divs.length === fn.call(divs, isElement).length;
+        if (divs.length !== fn.call(divs, isElement).length) return false;
+        if (1 !== fn.call(divs, divs[0]).length) return false;
+        if (2 !== fn.call(divs, [divs[0], divs[1]]).length) return false;
+        if (1 !== fn.call(divs, [divs[0], divs[0]]).length) return false;
+        return 0 === fn.call(divs).length && 0 === fn.call(divs, []).length;
     }});
     
     aok({id:'fnNot', test:function() {
-        var fn = scan.fn.not;
+        var fn = scan.fn.not, size = divs.length;
         if (0 !== fn.call(divs, 'div').length) return false;
-        return 0 === fn.call(divs, isElement).length;
+        if (0 !== fn.call(divs, isElement).length) return false;
+        if ((size-1) !== fn.call(divs, divs[0]).length) return false;
+        if ((size-2) !== fn.call(divs, [divs[0], divs[1]]).length) return false;
+        if ((size-1) !== fn.call(divs, [divs[0], divs[0]]).length) return false;
+        return size === fn.call(divs).length && size === fn.call(divs, []).length;
     }});
 }(this, document));
