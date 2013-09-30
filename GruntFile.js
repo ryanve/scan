@@ -2,9 +2,17 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
-            beforeconcat: ['src/', 'test/', 'GruntFile.js'],
-            afterconcat: ['<%= pkg.name %>.js'],
+            // gruntjs.com/configuring-tasks#globbing-patterns
+            // **/** matches in current and sub dirs
+            all: ['./'], // current dir and sub dirs
+            sub: ['*/'], // sub dirs
+            dir: ['*.js'], // current dir
+            src: ['src/'],
+            test: ['test/'],
+            grunt: ['GruntFile.js'],
+            build: ['<%= pkg.name %>.js'],
             options: {
+                ignores: ['**/**/node_modules/', '**/**/vendor/', '**/**.min.js'],
                 expr:true, sub:true, supernew:true, debug:true, node:true, 
                 boss:true, devel:true, evil:true, laxcomma:true, eqnull:true, 
                 undef:true, unused:true, browser:true, jquery:true, maxerr:10
@@ -41,5 +49,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.registerTask('default', ['jshint:beforeconcat', 'concat', 'jshint:afterconcat', 'uglify']);
+    grunt.registerTask('default', ['jshint:grunt', 'jshint:sub', 'concat', 'jshint:build', 'uglify']);
 };
