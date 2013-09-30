@@ -5,7 +5,10 @@
       , byClass = 'getElementsByClassName'
       , byTag = 'getElementsByTagName'
       , hasByClass = byClass in document
-      , divs = docElem[byTag]('div');
+      , hasQsa = 'querySelectorAll' in document
+      , divs = docElem[byTag]('div')
+      , html = scan('html')
+      , body = scan('body');
     
     function isElement() {
         return 1 === this.nodeType;
@@ -32,6 +35,25 @@
             true === scan.contains([0, 1], 1) &&
             false === scan.contains([0, 1], 2) &&
             false === scan.contains({}, 1);
+    }});
+    
+    aok({id:'fnFindSelect', test:function() {
+        var find = scan.fn.find;
+        if (1 !== find.call(html, 'body').length) return false; 
+        if (0 !== find.call(body, 'html').length) return false;
+        // QSA effectively queries top-down and then filters by those contained
+        if (hasQsa != find.call(html, 'html body').length) return false;
+        return scan('*').length > find.call(body, '*').length;
+    }});
+    
+    aok({id:'fnFindObject', test:function() {
+        var find = scan.fn.find, main = scan('main'), div = scan('div');
+        if (1 !== find.call(html, body[0]).length) return false;
+        if (0 !== find.call(body, html[0]).length) return false;
+        if (1 !== find.call(html, body).length) return false;
+        if (0 !== find.call(body, html).length) return false;
+        if (2 !== find.call(html, [body[0], body[0]]).length) return false;
+        return find.call(main, div).length <= div.length;
     }});
     
     aok({id:'fnFilter', test:function() {
