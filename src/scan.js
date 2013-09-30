@@ -108,12 +108,12 @@
      * @return {Array} descendant needles
      */
     function contained(nodes, needles) {
-        var j, l, ret = [], i = 0, u = 0, h = nodes.length;
+        var j, l, ret = [], i = 0, h = nodes.length;
         needles = needles.nodeType ? [needles] : needles;
         for (l = needles.length; i < l; i++) {
-            for (j = h; j--;) {
-                if (wraps(nodes[j], needles[i])) {
-                    ret[u++] = needles[i];
+            for (j = 0; j < h;) {
+                if (wraps(nodes[j++], needles[i])) {
+                    ret.push(needles[i]);
                     break;
                 }
             }
