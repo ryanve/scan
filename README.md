@@ -6,7 +6,7 @@
 <code>$ <a href="https://npmjs.org/package/scan">npm install scan</a></code>
 </pre>
 
-## API
+## API ([0.5](../../releases))
 
 - `scan(query, context?)`
   - `scan(selector)` &rarr; elements that match `selector`
