@@ -87,6 +87,7 @@
     aok({id:'fnFilter', test:function() {
         return every([
             [0, divs],
+            [0, divs, ''],
             [0, divs, []],
             [1, divs, divs[0]],
             [1, divs, [divs[0], divs[0]]],
@@ -99,6 +100,7 @@
     aok({id:'fnNot', test:function() {
         return every([
             [divs.length, divs],
+            [divs.length, divs, ''],
             [divs.length, divs, []],
             [divs.length-1, divs, divs[0]],
             [divs.length-1, divs, [divs[0], divs[0]]],

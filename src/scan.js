@@ -156,11 +156,11 @@
     detect(['not', 'filter'], function(key, keep) {
         effin[key] = function(q) {
             var kept = [], isF = typeof q == 'function';
-            if (null == q) kept = keep ? kept : ary(this);
-            else detect(this, function(v, j) {
+            if (q) detect(this, function(v, j) {
                 var fail = isF ? !q.call(v, j) : !include(this, v);
                 fail == keep || kept.push(v);
-            }, typeof q == 'string' ? qsa(q) : !isF && q.nodeType ? [q] : q);
+            }, typeof q == 'string' ? qsa(q) : q.nodeType ? [q] : q);
+            else kept = keep ? kept : ary(this);
             return this[chain] ? this[chain](kept) : kept;
         };
     });
