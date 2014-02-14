@@ -10,13 +10,13 @@
     , byAll = 'querySelectorAll'
     , byTag = 'getElementsByTagName'
     , query = doc[byAll] ? byAll : byTag
-    , compare = 'compareDocumentPosition'
+    , compare = 'compareDocumentPosition'    
 
-    /**
-     * @param {Node|*} a element or document to search in
-     * @param {Element|*} b element to search for
-     * @return {boolean} true if A contains B
-     */
+      /**
+       * @param {Node|*} a element or document to search in
+       * @param {Element|*} b element to search for
+       * @return {boolean} true if A contains B
+       */
     , wraps = docElem.contains || docElem[compare] ? function(a, b) {
         var adown = 9 === a.nodeType ? a.documentElement : a, bup = b && b.parentNode;
         return bup && 1 === bup.nodeType ? a === bup || !!(
