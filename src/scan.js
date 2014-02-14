@@ -1,4 +1,4 @@
-(function(root, name, make) {
+(function(root, name, make) {//#find+annos
     typeof module != 'undefined' && module['exports'] ? module['exports'] = make() : root[name] = make();
 }(this, 'scan', function() {
 
@@ -51,8 +51,8 @@
     }
     
     /**
-     * @param {(string|Node|NodeList|Array|*)=} item
-     * @param {(string|Node|NodeList|Array|Object)=} root
+     * @param {(string|Node|{length:number}|*)=} item
+     * @param {(string|Node|{length:number})=} root
      * @return {Array}
      */
     function scan(item, root) {
@@ -103,8 +103,8 @@
     }
     
     /**
-     * @param {Object|Array|NodeList} nodes
-     * @param {Object|Array|NodeList|Element} needles
+     * @param {{length:number}} nodes
+     * @param {{length:number}|Element} needles
      * @return {Array} descendant needles
      */
     function contained(nodes, needles) {
@@ -130,18 +130,27 @@
     }
 
     /**
-     * @param {Object|Array|NodeList} ob
+     * @param {{length:number}} ob
      * @param {Function} fn
      * @param {*=} scope
-     */    
+     */
     function detect(ob, fn, scope) {
         for (var v, i = 0, l = ob.length; i < l;)
             if (fn.call(scope, v = ob[i], i++, ob)) return v;
     }
     
     /**
-     * @this {Object|Array|NodeList}
-     * @param {Object|Array|NodeList|Element|Function|string|*}  needle
+     * @param {string|Node|{length:number}|*} ob
+     * @param {(string|Node|{length:number}|Function|null)=} fn
+     * @param {*=} scope
+     */
+    function find(ob, fn, scope) {
+        return typeof fn == 'function' ? detect(ob, fn, scope) : scan(ob, fn);
+    }
+    
+    /**
+     * @this {{length:number}}
+     * @param {{length:number}|Element|Function|string|*} needle
      * @param {*=} scope
      */
     effin['find'] = function(needle, scope) {
@@ -170,7 +179,7 @@
     scan['id'] = id;
     scan['inNode'] = wraps;
     scan['contains'] = contains;
-    scan['find'] = detect;
+    scan['find'] = find;
     scan['fn'] = effin;
     return scan;
 }));
