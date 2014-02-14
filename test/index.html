@@ -1,36 +1,37 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <link rel="dns-prefetch" href="//airve.com">
-  <title>scan: test suite</title>
-  <meta name=viewport content="width=device-width,initial-scale=1.0">
-  <meta name=description content="JavaScript test suite for scan.js">
-  <meta name=author content="Ryan Van Etten">
-  <link rel=stylesheet href="http://airve.com/css/sitewide.201301233.css">
-  <style>
-    html { font-family:sans-serif; background:#efefef; color:#111 }
-    body { width:96%; margin:auto; font-size:1em; line-height:1.6 }
-  </style>
-</head>
-<body>
-  <h1>
-    <a href="http://github.com/ryanve/scan">scan</a>: test suite
-  </h1>
+<title>Tests</title>
+<style>
+  html { font-family:sans-serif; background:#efefef; color:#111 }
+  body { width:96%; margin:auto; font-size:1em; line-height:1.6 }
+  pre, code, kbd { font-family:monospace; -moz-tab-size:4; -o-tab-size:4; tab-size:4 }
+  h3 b { font-weight:700 }
+  h3, pre b { font-weight:400 }
+  pre { padding:0 .5em; white-space:pre-line }
+  pre span { white-space:pre-wrap }
+  pre b { color:#008080 }
+  pre small { font-size:inherit; font-family:inherit; font-weight:lighter; color:#707070 }
+  kbd { display:inline-block; padding:.2em }
+  pre kbd { padding:0 }
+</style>
 
-  <main id="main" role="main">
-    <h2>Test Elements</h2>
-    <p>Open the console for results.</p>
-    <div id="e1" class="div"></div>
-    <div id="e2" class="div"></div>
-    <div id="e3" class="div"></div>
-    <div class="div"><span>1</span><span>2</span><span>3</span></div>
-    <div class="div"></div>
-  </main>
+<h1>Tests</h1>
+<h3><b>Browser:</b> Check tests in the console.</h3>
+<h3><b>CLI:</b> Run these commands:</h3>
+<pre>
+  <span><b>$</b> <kbd>cd</kbd> <a href="../">aok</a>       <small># Go to the package root.</small></span>
+  <span><b>$</b> <kbd>npm install</kbd>  <small># Install dependencies.</small></span>
+  <span><b>$</b> <kbd>grunt aok</kbd>    <small># Run tests.</small></span>
+</pre>
 
-  <script src="http://airve.github.io/js/aok/aok.min.js"></script>
-  <script src="http://airve.github.io/js/ender/ender.js"></script>
-  <script src="../src/scan.js"></script>
-  <script src="tests.js"></script>
-</body>
-</html>
+<div id="test-elements">
+  <h2>Test Elements</h2>
+  <div id="e1" class="div"></div>
+  <div id="e2" class="div"></div>
+  <div id="e3" class="div"></div>
+  <div class="div"><span>1</span><span>2</span><span>3</span></div>
+  <div class="div"></div>
+</div>
+
+<script src="../node_modules/aok/aok.min.js"></script>
+<script src="../src/scan.js"></script>
+<script src="tests.js"></script>

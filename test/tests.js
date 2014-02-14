@@ -74,8 +74,8 @@
   }});
   
   aok({id:'fnFindObject', test:function() {
-    var find = scan.fn.find, main = scan('main');
-    return find.call(main, divs).length <= divs.length && every([
+    var find = scan.fn.find, parent = scan.id('test-elements');
+    return find.call(parent, divs).length <= divs.length && every([
       [1, html, body[0]],
       [0, body, html[0]],
       [1, html, body],
