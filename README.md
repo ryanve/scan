@@ -1,8 +1,10 @@
 # [scan](../../)
 
-[<b>scan</b>](https://npmjs.org/package/scan) is a <a href="#browser-support"><code>querySelectorAll</code></a>-based selector engine designed for standalone use or integration into [jQuery](http://jquery.com/)-like libraries like [ender](https://github.com/ender-js).
+<b>scan</b> is a <a href="#browser-support"><code>querySelectorAll</code></a>-based selector engine designed for standalone use or integration into [jQuery](http://jquery.com/)-like libraries like [ender](https://github.com/ender-js).
 
-## API ([0.6](../../releases))
+[npm: <b>scan</b>](https://npmjs.org/package/scan)
+
+## API ([0.7](../../releases))
 
 ### scan()
 #### `scan(query, context?)`
@@ -10,17 +12,18 @@
 - `scan(selector, node|nodes)` &rarr; elements that match `selector` from `node` or any `nodes`
 - `scan(node|nodes)` &rarr; array
 
-### scan.contains()
-#### `scan.contains(haystack, needle, start?)`
+### .matches()
+#### `scan.matches(element, selector)` &rarr; boolean
+
+### .contains()
+#### `scan.contains(haystack, needle, start?)` &rarr; boolean
 - `scan.contains(node, element)` &rarr; `true` if `node` contains `element`
 - `scan.contains(stack, item, start?)` &rarr; `true` if `stack` contains `item`
 - `scan.contains(str, substr, start?)` &rarr; `true` if `str` contains `substr`
 
-### scan.find()
+### .find()
 #### `scan.find(query, context?)`
 #### `scan.find(stack, fn, scope?)`
-
-### .find()
 #### `.find(needle)`
 - `scan.fn.find.call(nodes, selector)` &rarr; descendants that match `selector`
 - `scan.fn.find.call(nodes, element|elements)` &rarr; `elements` that descend from any `nodes`
