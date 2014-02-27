@@ -25,7 +25,23 @@
       } : function(a, b) {
         while (b = b && b.parentNode) if (b === a) return true;
         return false;
+      }
+
+    , matcher = docElem['matches'] || detect(['webkit', 'moz', 'o', 'ms'], function(prefix) {
+        return docElem[prefix + 'MatchesSelector'];
+      })
+
+      /**
+       * @param {Element} e
+       * @param {string} selector
+       * @return {boolean} true if element matches selector
+       */
+    , matches = typeof matcher == 'function' ? function(e, selector) {
+        return !!selector && !!matcher.call(e, selector);
+      } : function(e, selector) {
+        return include(qsa(selector, e.ownerDocument), e);
       };
+      
 
   /**
    * @param {string=} selector
@@ -179,6 +195,7 @@
   scan['id'] = id;
   scan['inNode'] = wraps;
   scan['contains'] = contains;
+  scan['matches'] = matches;
   scan['find'] = find;
   scan['fn'] = effin;
   return scan;

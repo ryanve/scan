@@ -109,4 +109,6 @@
       [0, divs, 'div']
     ], tallies, scan.fn.not);
   }});
+  
+  aok({id:'matches', test:scan.matches(divs[0], 'div') === true});
 }(this, document));
