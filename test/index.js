@@ -13,7 +13,7 @@
   3 > divs.length && aok.error('Tests require 3+ divs.');
   
   // Use alert if console is unavail.
-  aok.prototype.express.force = true;
+  'reduce' in [] || (aok.prototype.express = aok.info);
 
   function isElement() {
     return 1 === this.nodeType;
@@ -93,7 +93,7 @@
       [1, divs, [divs[0], divs[0]]],
       [2, divs, [divs[0], divs[1]]],
       [divs.length, divs, isElement],
-      [divs.length, divs, 'div'],
+      [divs.length, divs, 'div']
     ], tallies, scan.fn.filter);
   }});
   
@@ -106,7 +106,7 @@
       [divs.length-1, divs, [divs[0], divs[0]]],
       [divs.length-2, divs, [divs[0], divs[1]]],
       [0, divs, isElement],
-      [0, divs, 'div'],
+      [0, divs, 'div']
     ], tallies, scan.fn.not);
   }});
 }(this, document));
