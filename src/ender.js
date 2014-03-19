@@ -4,7 +4,7 @@
     , x = require(name);
   if ($) {
     $['_select'] = x;
-    $['pushStack'] = $['pushStack'] || $;
+    $['fn']['pushStack'] = $['fn']['pushStack'] || $;
     if ($['submix']) {
       $['submix'](x);
     } else {
