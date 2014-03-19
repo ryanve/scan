@@ -1,5 +1,5 @@
 /*!
- * scan 0.7.0+201402270255
+ * scan 0.7.1+201403191553
  * https://github.com/ryanve/scan
  * MIT License 2014 Ryan Van Etten
  */
