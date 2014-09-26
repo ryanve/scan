@@ -1,30 +1,31 @@
 <!DOCTYPE html>
 <title>Tests</title>
 <style>
-  html { font-family:sans-serif; background:#efefef; color:#111 }
+  html { font-family:sans-serif; background:#111; color:#efefef }
   body { width:96%; margin:auto; font-size:1em; line-height:1.6 }
-  pre, code, kbd { font-family:monospace; -moz-tab-size:4; -o-tab-size:4; tab-size:4 }
+  a[href] { color:#ed3; text-decoration:none; border-bottom:1px solid }
+  a[href]:hover { color:#111; background:#ed3 }
+  pre, code, kbd { font-family:monospace; -moz-tab-size:2; -o-tab-size:2; tab-size:2 }
   h3 b { font-weight:700 }
   h3, pre b { font-weight:400 }
   pre { padding:0 .5em; white-space:pre-line }
   pre span { white-space:pre-wrap }
-  pre b { color:#008080 }
-  pre small { font-size:inherit; font-family:inherit; font-weight:lighter; color:#707070 }
-  kbd { display:inline-block; padding:.2em }
+  pre b { color:#28d }
+  kbd { display:inline-block; padding:.2em } 
   pre kbd { padding:0 }
 </style>
 
-<h1>Tests</h1>
-<h3><b>Browser:</b> Check tests in the console.</h3>
-<h3><b>CLI:</b> Run these commands:</h3>
-<pre>
-  <span><b>$</b> <kbd>cd</kbd> <a href="../">aok</a>       <small># Go to the package root.</small></span>
-  <span><b>$</b> <kbd>npm install</kbd>  <small># Install dependencies.</small></span>
-  <span><b>$</b> <kbd>grunt aok</kbd>    <small># Run tests.</small></span>
-</pre>
+<h1>Running tests</h1>
+<h3>Install <a href="../package.json">devDependencies</a></h3>
+<pre><span><b>$</b> <kbd>npm install</kbd></span></pre>
+<h3><b>Browser</b>: open the console</h3>
+<h3><b>CLI</b>: run tests via grunt</h3>
+<pre><span><b>$</b> <kbd>grunt test</kbd></span></pre>
+<h1>Editing tests</h1>
+<p>Edit <a href="https://github.com/ryanve/aok#readme">aok</a> tests in <a href="index.js">index.js</a></p>
 
 <div id="test-elements">
-  <h2>Test Elements</h2>
+  <h1>Test elements</h1>
   <div id="e1" class="div"></div>
   <div id="e2" class="div"></div>
   <div id="e3" class="div"></div>

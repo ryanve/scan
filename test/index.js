@@ -1,27 +1,29 @@
-(function(root, document) {
-  var aok = root['aok']
-    , scan = root['scan']
-    , docElem = document.documentElement
+!function(root, name) {
+  if (typeof document == 'undefined') { 
+    return require('aok').warn('Open ./test/index.html to run tests');
+  }
+
+  var doc = root.document
+    , aok = root.aok
+    , scan = root[name]
+    , docElem = doc.documentElement
     , byClass = 'getElementsByClassName'
     , byTag = 'getElementsByTagName'
-    , hasByClass = byClass in document
-    , hasQsa = 'querySelectorAll' in document
+    , hasByClass = byClass in doc
+    , hasQsa = 'querySelectorAll' in doc
     , divs = docElem[byTag]('div')
     , html = scan('html')
     , body = scan('body');
 
-  3 > divs.length && aok.error('Tests require 3+ divs.');
-  
-  // Use alert if console is unavail.
-  'reduce' in [] || (aok.prototype.express = aok.info);
+  if (3 > divs.length) aok.error('Tests require 3+ divs.');
+  if (![].some) aok.prototype.express = aok.info; // alert in IE
 
   function isElement() {
     return 1 === this.nodeType;
   }
   
-  function every(ob, fn, scope) {
-    var l = ob.length, i = 0;
-    while (i < l) if (!fn.call(scope, ob[i], i++, ob)) return false;
+  function every(o, fn, scope) {
+    for (var l = o.length, i = 0; i < l;) if (!fn.call(scope, o[i], i++, o)) return false;
     return true;
   }
   
@@ -40,16 +42,24 @@
   function tallies(arr) {
     return arr[0] === this.apply(arr[1], arr.slice(2)).length;
   }
+  
+  aok('instance', scan() instanceof scan && scan() instanceof Array);
+  aok('constructor', scan().constructor !== Array);
+  aok('pushStack-instance', scan().pushStack([]) instanceof scan);
+  aok('pushStack-values', scan.prototype.pushStack([0, 1]).join() === '0,1');
+  aok('chaining', aok.can(function() {
+    return scan().not().not();
+  }));
 
-  aok({id:'selectTag', test:function() {
-    return scan.qsa('div').length === document[byTag]('div').length;
-  }});
+  aok('selectTag', function() {
+    return scan.qsa('div').length === doc[byTag]('div').length;
+  });
   
-  hasByClass && aok({id:'selectClass', test:function() {
-    return scan.qsa('.div').length === document[byClass]('div').length;
-  }});
+  hasByClass && aok('selectClass', function() {
+    return scan.qsa('.div').length === doc[byClass]('div').length;
+  });
   
-  aok({id:'contains', test:function() {
+  aok('contains', function() {
     return every([
       [true, null, 'str', 's'],
       [true, null, 'str', 'tr'],
@@ -61,9 +71,9 @@
       [false, null, docElem[byTag]('*')[0], docElem],
       [false, null, docElem, docElem]
     ], complies, scan.contains);
-  }});
+  });
   
-  aok({id:'fnFindSelect', test:function() {
+  aok('fnFindSelect', function() {
     var find = scan.fn.find;
     return scan('*').length > find.call(body, '*').length && every([
       [1, html, 'body'],
@@ -71,9 +81,9 @@
       // QSA effectively queries top-down and then filters by those contained
       [+hasQsa, html, 'html body']
     ], tallies, find);
-  }});
+  });
   
-  aok({id:'fnFindObject', test:function() {
+  aok('fnFindObject', function() {
     var find = scan.fn.find, parent = scan.id('test-elements');
     return find.call(parent, divs).length <= divs.length && every([
       [1, html, body[0]],
@@ -82,9 +92,9 @@
       [0, body, html],
       [2, html, [body[0], body[0]]]
     ], tallies, find);
-  }});
+  });
   
-  aok({id:'fnFilter', test:function() {
+  aok('fnFilter', function() {
     return every([
       [0, divs],
       [0, divs, ''],
@@ -95,9 +105,9 @@
       [divs.length, divs, isElement],
       [divs.length, divs, 'div']
     ], tallies, scan.fn.filter);
-  }});
+  });
   
-  aok({id:'fnNot', test:function() {
+  aok('fnNot', function() {
     return every([
       [divs.length, divs],
       [divs.length, divs, ''],
@@ -108,7 +118,7 @@
       [0, divs, isElement],
       [0, divs, 'div']
     ], tallies, scan.fn.not);
-  }});
+  });
   
-  aok({id:'matches', test:scan.matches(divs[0], 'div') === true});
-}(this, document));
+  aok('matches', scan.matches(divs[0], 'div') === true);
+}(this, 'scan');

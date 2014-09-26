@@ -1,20 +1,16 @@
-(function(root, name) {
-  // ender.jit.su bridge
-  var $ = root['ender']
-    , x = require(name);
-  if ($) {
-    $['_select'] = x;
-    $['fn']['pushStack'] = $['fn']['pushStack'] || $;
-    if ($['submix']) {
-      $['submix'](x);
-    } else {
-      $['ender'](x['fn'], true);
-      $['contains'] = x['contains'];
-    }
+!function(root, name) {
+  var api = require(name)
+    , ender = root.ender
+    , dj = root.dj;
+    
+  if (ender) {
+    ender._select = api;
+    ender.ender(api.fn, true);
+    ender['contains'] = api.contains;
   }
-  // github.com/ryanve/dj
-  if ($ = root['dj']) {
-    $['hook']('select', x['qsa']);
-    $['bridge'].call(x, $);
+  
+  if (dj) {
+    dj.hook('select', api.qsa);
+    dj.submix(api);
   }
-}(this, 'scan'));
+}(this, 'scan');

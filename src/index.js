@@ -1,12 +1,12 @@
-(function(root, name, make) {
+!function(root, name, make) {
   if (typeof module != 'undefined' && module['exports']) module['exports'] = make();
   else root[name] = make();
 }(this, 'scan', function() {
 
-  var effin = {}
+  var effin = scan.prototype = Scan.prototype = []
+    , push = effin.push
     , doc = document
     , docElem = doc.documentElement
-    , chain = 'pushStack'
     , byAll = 'querySelectorAll'
     , byTag = 'getElementsByTagName'
     , query = doc[byAll] ? byAll : byTag
@@ -42,6 +42,26 @@
         return include(qsa(selector, e.ownerDocument), e);
       };
       
+  /**
+   * @param {(string|Node|{length:number}|*)=} item
+   * @param {(string|Node|{length:number})=} root
+   * @return {Scan}
+   */
+  function scan(item, root) {
+    return new Scan(item, root);
+  }
+  
+  /**
+   * @constructor
+   * @this {Scan} instance
+   * @param {?(string|Node|{length:number})=} item
+   * @param {?(string|Node|{length:number})=} root
+   */
+  function Scan(item, root) {
+    this.length = 0;
+    this.constructor = Scan;
+    if (item) push.apply(this, typeof item == 'string' ? qsa(item, root) : collect(item));
+  }
 
   /**
    * @param {string=} selector
@@ -57,24 +77,20 @@
   }
 
   /**
-   * @param {Array|Object|NodeList|string|*} list
+   * @param {{length:number}} list
    * @return {Array}
    */
   function ary(list) {
-    var pure = [], l = list.length, i = 0;
-    while (i < l) pure[i] = list[i++];
+    for (var pure = [], l = list.length, i = 0; i < l;) pure[i] = list[i++];
     return pure;
   }
   
   /**
-   * @param {(string|Node|{length:number}|*)=} item
-   * @param {(string|Node|{length:number})=} root
+   * @param {{length:number}|Node|Window} o
    * @return {Array}
    */
-  function scan(item, root) {
-    if (!item) return [];
-    if (typeof item == 'string') return qsa(item, root);
-    return item.nodeType || item.window == item ? [item] : ary(item);
+  function collect(o) {
+    return o.nodeType || o.window == o ? [o] : ary(o);
   }
 
   /**
@@ -101,8 +117,7 @@
    */
   function include(stack, needle, start) {
     var l = stack.length, i = start >> 0;
-    for (0 > i && (i += l); i < l; i++)
-      if (stack[i] === needle && i in stack) return true;
+    for (0 > i && (i += l); i < l; i++) if (stack[i] === needle && i in stack) return true;
     return false;
   }
 
@@ -146,47 +161,65 @@
   }
 
   /**
-   * @param {{length:number}} ob
+   * @param {{length:number}} o
    * @param {Function} fn
    * @param {*=} scope
    */
-  function detect(ob, fn, scope) {
-    for (var v, i = 0, l = ob.length; i < l;)
-      if (fn.call(scope, v = ob[i], i++, ob)) return v;
+  function detect(o, fn, scope) {
+    for (var v, i = 0, l = o.length; i < l;) if (fn.call(scope, v = o[i], i++, o)) return v;
   }
   
   /**
-   * @param {string|Node|{length:number}|*} ob
+   * @param {string|Node|{length:number}|*} o
    * @param {(string|Node|{length:number}|Function|null)=} fn
    * @param {*=} scope
    */
-  function find(ob, fn, scope) {
-    return typeof fn == 'function' ? detect(ob, fn, scope) : scan(ob, fn);
+  function find(o, fn, scope) {
+    return typeof fn == 'function' ? detect(o, fn, scope) : qsa(o, fn);
   }
+  
+  /**
+   * @param {{length:number}} before
+   * @param {{length:number}} after
+   * @return {{length:number}}
+   */
+  function chain(before, after) {
+    return before.pushStack ? before.pushStack(after) : after;
+  }
+
+  /**
+   * @param {{length:number}} items
+   * @return {{length:number}}
+   */
+  effin['pushStack'] = function(items) {
+    for (var o = new this.constructor, i = 0, l = items.length; i < l;) push.call(o, items[i++]);
+    return o;
+  };
   
   /**
    * @this {{length:number}}
    * @param {{length:number}|Element|Function|string|*} needle
    * @param {*=} scope
+   * @return {*}
    */
   effin['find'] = function(needle, scope) {
     var found;
     if (typeof needle == 'string') found = amass(needle, this);
     else if (typeof needle == 'object') found = contained(this, needle);
     else return detect(this, needle, scope);
-    return this[chain] ? this[chain](found) : found;
+    return chain(this, found);
   };
   
   // Comply w/ api.jquery.com/filter + api.jquery.com/not
-  detect(['not', 'filter'], function(key, keep) {
+  detect(['not', 'filter'], function(key, yes) {
     effin[key] = function(q) {
       var kept = [], isF = typeof q == 'function';
-      if (q) detect(this, function(v, j) {
-        var fail = isF ? !q.call(v, j) : !include(this, v);
-        fail == keep || kept.push(v);
+      if (!q) kept = yes ? kept : ary(this);
+      else detect(this, function(v, j) {
+        var keep = isF ? q.call(v, j) : include(this, v);
+        if (keep == yes) kept.push(v);
       }, typeof q == 'string' ? qsa(q) : q.nodeType ? [q] : q);
-      else kept = keep ? kept : ary(this);
-      return this[chain] ? this[chain](kept) : kept;
+      return chain(this, kept);
     };
   });
 
@@ -199,4 +232,4 @@
   scan['find'] = find;
   scan['fn'] = effin;
   return scan;
-}));
+});
