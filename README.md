@@ -1,46 +1,65 @@
-# [scan](../../)
+# scan
+#### standalone <a href="#browser-support"><code>querySelectorAll</code></a> selector engine with [jQuery](http://jquery.com)-like interface
 
-<b>scan</b> is a <a href="#browser-support"><code>querySelectorAll</code></a>-based selector engine designed for standalone use or integration into [jQuery](http://jquery.com/)-like libraries like [ender](https://github.com/ender-js).
+```sh
+$ npm install scan --save
+```
 
-[npm: <b>scan</b>](https://npmjs.org/package/scan)
+### Basic usage
 
-## API ([0.7](../../releases))
+```js
+var scan = require('scan')
+scan('.example').find('a').not('[href^="#"]')
+```
 
-### scan()
-#### `scan(query, context?)`
-- `scan(selector)` &rarr; elements that match `selector`
-- `scan(selector, node|nodes)` &rarr; elements that match `selector` from `node` or any `nodes`
-- `scan(node|nodes)` &rarr; array
+## API ([0.8](../../releases))
 
-### .matches()
-#### `scan.matches(element, selector)` &rarr; boolean
+<ul>
+<li> <code>scan()</code> instances are array-like and inherit from <code>scan.prototype</code> and <code>Array.prototype</code>
+<li> <code>scan()</code> methods chain intuitively or are callable via <code>scan.prototype[method]<wbr>.call(array)</code>
+<li> Methods are generally compatible with jQuery methods of the same name
+</ul>
 
-### .contains()
-#### `scan.contains(haystack, needle, start?)` &rarr; boolean
-- `scan.contains(node, element)` &rarr; `true` if `node` contains `element`
-- `scan.contains(stack, item, start?)` &rarr; `true` if `stack` contains `item`
-- `scan.contains(str, substr, start?)` &rarr; `true` if `str` contains `substr`
+### scan(query, context?)
+- `scan(selector)` &rarr; elements that match <var>selector</var>
+- `scan(selector, node|nodes)` &rarr; elements that match <var>selector</var> from <var>node</var> or any <var>nodes</var>
+- `scan(node|nodes)` &rarr; nodes wrapped in `scan` instance
 
-### .find()
-#### `scan.find(query, context?)`
-#### `scan.find(stack, fn, scope?)`
-#### `.find(needle)`
-- `scan.fn.find.call(nodes, selector)` &rarr; descendants that match `selector`
-- `scan.fn.find.call(nodes, element|elements)` &rarr; `elements` that descend from any `nodes`
-- `scan.fn.find.call(stack, fn, scope?)` &rarr; same as `scan.find(stack, fn, scope?)`
+<a name="scan.prototype.find"></a>
+### .find(needle)
+- `scan(query).find(selector)` &rarr; descendants that match <var>selector</var>
+- `scan(query).find(element|elements)` &rarr; elements that descend from <var>query</var>
+- `scan(stack).find(fn, scope?)` &rarr; the first value to pass `fn.call(scope, value, i, stack)`
 
-### .filter()
-#### `.filter(needle)`
-- `scan.fn.filter.call(nodes, selector)` &rarr; `nodes` filtered by `selector`
-- `scan.fn.filter.call(nodes, fn)` &rarr; `nodes` filtered by `fn.call(node, i)`
-- `scan.fn.filter.call(nodes, element|elements)` &rarr; `nodes` filtered by `element|elements`
+<a name="scan.prototype.filter"></a>
+### .filter(needle)
+- `scan(query).filter(nodes, selector)` &rarr; stack filtered by <var>selector</var>
+- `scan(query).filter(fn)` &rarr; stack filtered by `fn.call(element, i)`
+- `scan(query).filter(element|elements)` &rarr; stack filtered by one or more elements
+- `scan(array).filter(values)` &rarr; the intersection of 2 arrays
 
-### .not()
-#### `.not(needle)`
-- `scan.fn.filter.call(nodes, selector)` &rarr; `nodes` filtered *against* `selector`
-- `scan.fn.filter.call(nodes, fn)` &rarr; `nodes` filtered *against* `fn.call(node, i)`
-- `scan.fn.filter.call(nodes, element|elements)` &rarr; `nodes` filtered *against* `element|elements`
-  
+<a name="scan.prototype.not"></a>
+### .not(needle)
+- `scan(query).filter(selector)` &rarr; `nodes` filtered *against* `selector`
+- `scan(query).not(fn)` &rarr; stack filtered *against* `fn.call(element, i)`
+- `scan(query).not(element|elements)`&rarr; stack filtered *against* one or more elements
+- `scan(array).not(values)` &rarr; the difference of 2 arrays
+
+<a name="scan.find"></a>
+### <span>#</span>find(needle)
+- `scan.find(selector, context?)` &rarr; array of elements that match <var>selector</var>
+- `scan.find(stack, fn, scope?)` &rarr; the first value to pass `fn.call(scope, value, i, stack)`
+
+<a name="scan.matches"></a>
+### <span>#</span>matches(element, selector)
+- `scan.matches(element, selector)` &rarr; `true` if <var>element</var> matches <var>selector</var>
+
+<a name="scan.contains"></a>
+### <span>#</span>contains(haystack, needle)
+- `scan.contains(node, element)` &rarr; `true` if <var>node</var> contains <var>element</var>
+- `scan.contains(stack, item, start=0)` &rarr; `true` if <var>stack</var> contains <var>item</var>
+- `scan.contains(str, substr, start=0)` &rarr; `true` if <var>str</var> contains <var>substr</var>
+
 ## <a name="browser-support"></a>Support
 
 Selector queries use [`querySelectorAll` where available](http://caniuse.com/#feat=queryselector) or else degrade to [`getElementsByTagName`](https://developer.mozilla.org/en-US/docs/Web/API/element.getElementsByTagName).
@@ -56,13 +75,11 @@ Selector queries use [`querySelectorAll` where available](http://caniuse.com/#fe
 
 ```sh
 $ npm install
-$ grunt jshint:src
+$ grunt test
 ```
 
 ## Fund
-
 <b>[Tip the developer](https://www.gittip.com/ryanve/)</b> =)
 
 ## License
-
 MIT

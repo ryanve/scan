@@ -5,7 +5,7 @@
   "homepage": "https://github.com/ryanve/scan",
   "license": "MIT",
   "author": "Ryan Van Etten",
-  "keywords": ["selector", "selector engine", "query", "ender"],
+  "keywords": ["selector", "selector engine", "query", "browser", "ender"],
   "main": "./scan.js",
   "ender": "./src/ender.js",
   "repository": {
