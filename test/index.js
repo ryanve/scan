@@ -16,7 +16,6 @@
     , body = scan('body');
 
   if (3 > divs.length) aok.error('Tests require 3+ divs.');
-  if (![].some) aok.prototype.express = aok.info; // alert in IE
 
   function isElement() {
     return 1 === this.nodeType;
@@ -69,7 +68,8 @@
       [false, null, {}, 1],
       [true, null, docElem, docElem[byTag]('*')[0]],
       [false, null, docElem[byTag]('*')[0], docElem],
-      [false, null, docElem, docElem]
+      [false, null, docElem, docElem],
+      [true, null, doc, docElem]
     ], complies, scan.contains);
   });
   
