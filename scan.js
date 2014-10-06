@@ -1,5 +1,5 @@
 /*!
- * scan 0.8.0+201409201400
+ * scan 0.8.1+201410061856
  * https://github.com/ryanve/scan
  * MIT License (c) 2014 Ryan Van Etten
  */
@@ -23,10 +23,12 @@
        * @return {boolean} true if A contains B
        */
     , wraps = docElem.contains || docElem[compare] ? function(a, b) {
+        // based on jQuery.contains
         var adown = 9 === a.nodeType ? a.documentElement : a, bup = b && b.parentNode;
-        return bup && 1 === bup.nodeType ? a === bup || !!(
-          adown.contains ? adown.contains(bup) : a[compare] && a[compare](bup) & 16
-        ) : false;
+        if (!bup) return false;
+        if (a === bup) return true;
+        if (1 !== bup.nodeType) return false;
+        return !!(adown.contains ? adown.contains(bup) : a[compare] && a[compare](bup) & 16);
       } : function(a, b) {
         while (b = b && b.parentNode) if (b === a) return true;
         return false;
