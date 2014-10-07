@@ -7,29 +7,11 @@
     , push = effin.push
     , doc = document
     , docElem = doc.documentElement
+    , domL4 = !!doc.contains && !!docElem.contains
     , byAll = 'querySelectorAll'
     , byTag = 'getElementsByTagName'
     , query = doc[byAll] ? byAll : byTag
-    , compare = 'compareDocumentPosition'    
-
-      /**
-       * @param {Node|*} a element or document to search in
-       * @param {Element|*} b element to search for
-       * @return {boolean} true if A contains B
-       */
-    , wraps = docElem.contains || docElem[compare] ? function(a, b) {
-        // based on jQuery.contains
-        var adown = 9 === a.nodeType ? a.documentElement : a, bup = b && b.parentNode;
-        if (!bup) return false;
-        if (a === bup) return true;
-        if (1 !== bup.nodeType) return false;
-        return !!(adown.contains ? adown.contains(bup) : a[compare] && a[compare](bup) & 16);
-      } : function(a, b) {
-        while (b = b && b.parentNode) if (b === a) return true;
-        return false;
-      }
-
-    , matcher = docElem['matches'] || detect(['webkit', 'moz', 'o', 'ms'], function(prefix) {
+    , matcher = docElem.matches || detect(['webkit', 'moz', 'o', 'ms'], function(prefix) {
         return docElem[prefix + 'MatchesSelector'];
       })
 
@@ -110,7 +92,7 @@
     }
     return els;
   }
-  
+
   /**
    * @param {Array|Object} stack
    * @param {*} needle
@@ -121,6 +103,18 @@
     var l = stack.length, i = start >> 0;
     for (0 > i && (i += l); i < l; i++) if (stack[i] === needle && i in stack) return true;
     return false;
+  }
+
+  /**
+   * @param {Node|*} a element or document to search in
+   * @param {Node|*} b element to search for
+   * @return {boolean} true if A contains B
+   */
+  function wraps(a, b) {
+    // Use parent b/c Node.contains is inclusive
+    if (domL4 && a.contains) return (b = b.parentNode) === a || a.contains(b);
+    while (b = b.parentNode) if (b === a) break;
+    return !!b;
   }
 
   /**

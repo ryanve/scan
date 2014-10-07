@@ -11,7 +11,7 @@
     , byTag = 'getElementsByTagName'
     , hasByClass = byClass in doc
     , hasQsa = 'querySelectorAll' in doc
-    , divs = docElem[byTag]('div')
+    , divs = doc.getElementById('test-elements')[byTag]('div')
     , html = scan('html')
     , body = scan('body');
 
@@ -58,17 +58,30 @@
     return scan.qsa('.div').length === doc[byClass]('div').length;
   });
   
-  aok('contains', function() {
+  aok('contains(str, substr)', function() {
     return every([
       [true, null, 'str', 's'],
       [true, null, 'str', 'tr'],
-      [false, null, 'str', 'a'],
+      [false, null, 'str', 'a']
+    ], complies, scan.contains);
+  });
+  
+  aok('contains(stack, value)', function() {
+    return every([
       [true, null, [0, 1], 1],
       [false, null, [0, 1], 2],
-      [false, null, {}, 1],
+      [false, null, {}, 1]
+    ], complies, scan.contains);
+  });
+  
+  aok('contains(container, node)', function() {
+    return every([
+      [false, null, doc, doc],
+      [false, null, docElem, docElem],
       [true, null, docElem, docElem[byTag]('*')[0]],
       [false, null, docElem[byTag]('*')[0], docElem],
-      [false, null, docElem, docElem],
+      [false, null, divs[0], divs[0].nextSibling],
+      [true, null, doc, doc.body],
       [true, null, doc, docElem]
     ], complies, scan.contains);
   });
