@@ -12,7 +12,7 @@ var scan = require('scan')
 scan('.example').find('a').not('[href^="#"]')
 ```
 
-## API ([0.8](../../releases))
+## API ([0.9](../../releases))
 
 <ul>
 <li> <code>scan()</code> instances are array-like and inherit from <code>scan.prototype</code> and <code>Array.prototype</code>

@@ -1,5 +1,5 @@
 /*!
- * scan 0.8.1+201410061856
+ * scan 0.9.0+201410070420
  * https://github.com/ryanve/scan
  * MIT License (c) 2014 Ryan Van Etten
  */
@@ -12,29 +12,11 @@
     , push = effin.push
     , doc = document
     , docElem = doc.documentElement
+    , domL4 = !!doc.contains && !!docElem.contains
     , byAll = 'querySelectorAll'
     , byTag = 'getElementsByTagName'
     , query = doc[byAll] ? byAll : byTag
-    , compare = 'compareDocumentPosition'    
-
-      /**
-       * @param {Node|*} a element or document to search in
-       * @param {Element|*} b element to search for
-       * @return {boolean} true if A contains B
-       */
-    , wraps = docElem.contains || docElem[compare] ? function(a, b) {
-        // based on jQuery.contains
-        var adown = 9 === a.nodeType ? a.documentElement : a, bup = b && b.parentNode;
-        if (!bup) return false;
-        if (a === bup) return true;
-        if (1 !== bup.nodeType) return false;
-        return !!(adown.contains ? adown.contains(bup) : a[compare] && a[compare](bup) & 16);
-      } : function(a, b) {
-        while (b = b && b.parentNode) if (b === a) return true;
-        return false;
-      }
-
-    , matcher = docElem['matches'] || detect(['webkit', 'moz', 'o', 'ms'], function(prefix) {
+    , matcher = docElem.matches || detect(['webkit', 'moz', 'o', 'ms'], function(prefix) {
         return docElem[prefix + 'MatchesSelector'];
       })
 
@@ -72,7 +54,7 @@
 
   /**
    * @param {string=} selector
-   * @param {(string|Node|NodeList|Array|Object)=} root
+   * @param {(string|Node|{length:number})=} root
    * @return {Array}
    */
   function qsa(selector, root) {
@@ -102,7 +84,7 @@
 
   /**
    * @param {string} selector
-   * @param {Array|Object|NodeList} roots nodes from which to base queries
+   * @param {{length:number}} roots nodes from which to base queries
    * @return {Array} unique matches that descend from any `roots` item
    */
   function amass(selector, roots) {
@@ -115,9 +97,9 @@
     }
     return els;
   }
-  
+
   /**
-   * @param {Array|Object} stack
+   * @param {{length:number}} stack
    * @param {*} needle
    * @param {number=} start
    * @return {boolean}
@@ -129,10 +111,22 @@
   }
 
   /**
+   * @param {Node|*} a element or document to search in
+   * @param {Node|*} b element to search for
+   * @return {boolean} true if A contains B
+   */
+  function wraps(a, b) {
+    // Use parent b/c Node.contains is inclusive
+    if (domL4 && a.contains) return (b = b.parentNode) === a || a.contains(b);
+    while (b = b.parentNode) if (b === a) break;
+    return !!b;
+  }
+
+  /**
    * combines jQuery.contains, _.contains, string.contains
-   * @param {string|Array|Object|Node} ob
+   * @param {Node|{length:number}|string} ob
    * @param {*} needle
-   * @param {number=} start
+   * @param {?number=} start
    * @return {boolean}
    */
   function contains(ob, needle, start) {
@@ -233,7 +227,7 @@
   scan['scan'] = scan;
   scan['qsa'] = qsa;
   scan['id'] = id;
-  scan['inNode'] = wraps;
+  scan['wraps'] = wraps;
   scan['contains'] = contains;
   scan['matches'] = matches;
   scan['find'] = find;
