@@ -222,7 +222,7 @@
   scan['scan'] = scan;
   scan['qsa'] = qsa;
   scan['id'] = id;
-  scan['inNode'] = wraps;
+  scan['wraps'] = wraps;
   scan['contains'] = contains;
   scan['matches'] = matches;
   scan['find'] = find;
