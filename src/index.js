@@ -49,7 +49,7 @@
 
   /**
    * @param {string=} selector
-   * @param {(string|Node|NodeList|Array|Object)=} root
+   * @param {(string|Node|{length:number})=} root
    * @return {Array}
    */
   function qsa(selector, root) {
@@ -79,7 +79,7 @@
 
   /**
    * @param {string} selector
-   * @param {Array|Object|NodeList} roots nodes from which to base queries
+   * @param {{length:number}} roots nodes from which to base queries
    * @return {Array} unique matches that descend from any `roots` item
    */
   function amass(selector, roots) {
@@ -94,7 +94,7 @@
   }
 
   /**
-   * @param {Array|Object} stack
+   * @param {{length:number}} stack
    * @param {*} needle
    * @param {number=} start
    * @return {boolean}
@@ -119,9 +119,9 @@
 
   /**
    * combines jQuery.contains, _.contains, string.contains
-   * @param {string|Array|Object|Node} ob
+   * @param {Node|{length:number}|string} ob
    * @param {*} needle
-   * @param {number=} start
+   * @param {?number=} start
    * @return {boolean}
    */
   function contains(ob, needle, start) {
